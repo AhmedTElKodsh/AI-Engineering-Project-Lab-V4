@@ -1,0 +1,1066 @@
+{
+  "schema_version": 2,
+  "project_version": "1.1.0",
+  "release_levels": {
+    "read_only_demo": "Read-only demo",
+    "sandbox_mvp": "Sandbox workflow MVP",
+    "portfolio": "Complete portfolio"
+  },
+  "tasks": [
+    {
+      "id": "T001",
+      "title": "Create a reproducible service and health test",
+      "milestone": "M0",
+      "required_for": "read_only_demo",
+      "depends_on": [],
+      "requirements": [
+        "FR14",
+        "NFR06"
+      ],
+      "files": [
+        "pyproject.toml",
+        ".python-version",
+        "uv.lock",
+        "src/commerce_support/__init__.py",
+        "src/commerce_support/main.py"
+      ],
+      "test_path": "tests/unit/test_health.py",
+      "additional_tests": [],
+      "acceptance": [
+        "A clean environment resolves the committed lock and installs the `commerce_support` package through a declared build system; importing it works outside pytest.",
+        "GET /health/live returns 200 and {\"status\":\"ok\"}; an unknown route returns 404.",
+        "The health test runs with no API key, model call, database, or external service."
+      ],
+      "teach_back": "Explain the request/response path, why a virtual environment is needed, what the lockfile adds to pyproject.toml, and what the build-system table changes.",
+      "concepts": [
+        "Python environment",
+        "packaging",
+        "HTTP",
+        "FastAPI",
+        "pytest",
+        "Git"
+      ]
+    },
+    {
+      "id": "T002",
+      "title": "Add quality checks, config boundaries, log redaction, and offline CI",
+      "milestone": "M0",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T001"
+      ],
+      "requirements": [
+        "FR14",
+        "NFR06",
+        "NFR07"
+      ],
+      "files": [
+        ".github/workflows/ci.yml",
+        ".gitignore",
+        ".env.example",
+        "src/commerce_support/config.py",
+        "src/commerce_support/observability/redaction.py",
+        "pyproject.toml"
+      ],
+      "test_path": "tests/unit/test_config.py",
+      "additional_tests": [
+        "tests/unit/test_log_redaction.py"
+      ],
+      "acceptance": [
+        "The default model mode is fake and no secret is required to run routine tests.",
+        "Invalid configuration produces a clear startup validation error; .env and local data are ignored by Git.",
+        "Lint, formatting, type checks, and unit tests run in a clean CI job; a deliberately broken test fails the job.",
+        "A redaction filter on application log handlers removes customer message bodies, Authorization headers, and secret-like values; a test proves they never appear in captured log output."
+      ],
+      "teach_back": "Explain the difference between a type checker, a runtime validator, and a test, and why CI should not require paid calls.",
+      "concepts": [
+        "Ruff",
+        "type checking",
+        "Pydantic settings",
+        "CI",
+        "secrets",
+        "log redaction"
+      ]
+    },
+    {
+      "id": "T003",
+      "title": "Define synthetic commerce and policy fixtures",
+      "milestone": "M0",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T001"
+      ],
+      "requirements": [
+        "FR06",
+        "NFR06"
+      ],
+      "files": [
+        "tests/fixtures/commerce.json",
+        "tests/fixtures/policy_v1.json",
+        "tests/fixtures/policy_v2.json",
+        "tests/conftest.py"
+      ],
+      "test_path": "tests/unit/test_fixture_contracts.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Fixtures cover two tenants, eligible/ineligible claims, missing delivery, empty stock, duplicates, a multi-line order, the same order reference in both tenants, two conflicting policy keys, and a policy change.",
+        "All references resolve within a tenant, delivery time exists only on shipment records, and fixture creation is deterministic from a fixed clock.",
+        "The seven-day boundary and a store-timezone date-boundary example have explicit expected outcomes."
+      ],
+      "teach_back": "Explain why fictional policy rules must be explicit and why a frozen clock prevents time-dependent tests.",
+      "concepts": [
+        "Data modeling",
+        "fixtures",
+        "timezones",
+        "business rules"
+      ]
+    },
+    {
+      "id": "T004",
+      "title": "Implement the typed case and analysis contracts",
+      "milestone": "M1",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T002",
+        "T003"
+      ],
+      "requirements": [
+        "FR01",
+        "FR02",
+        "NFR01"
+      ],
+      "files": [
+        "src/commerce_support/cases/schemas.py",
+        "src/commerce_support/auth/principal.py",
+        "src/commerce_support/commerce/schemas.py",
+        "src/commerce_support/workflow/states.py"
+      ],
+      "test_path": "tests/unit/test_schemas.py",
+      "additional_tests": [],
+      "acceptance": [
+        "TicketAnalysis uses the six documented intent values, an order reference and product mention (never internal IDs), explicit nulls, and forbidden extra fields.",
+        "Blank/oversized messages and invalid quantity or enum values are rejected.",
+        "Principal is separate from model schemas; model fields cannot set tenant, roles, or approval.",
+        "Case and proposal status enums match `02_ARCHITECTURE.md` §4 exactly, and the transition tables are encoded as data that rejects unlisted transitions."
+      ],
+      "teach_back": "Show an output that is schema-valid but factually wrong. Explain which layer must detect it.",
+      "concepts": [
+        "Pydantic",
+        "JSON Schema",
+        "validation",
+        "trust boundaries"
+      ]
+    },
+    {
+      "id": "T005",
+      "title": "Build fake and hosted model adapter contracts",
+      "milestone": "M1",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T004"
+      ],
+      "requirements": [
+        "FR02",
+        "FR11",
+        "NFR05",
+        "NFR06"
+      ],
+      "files": [
+        "src/commerce_support/ai/client.py",
+        "src/commerce_support/ai/fake.py",
+        "src/commerce_support/ai/hosted.py"
+      ],
+      "test_path": "tests/contract/test_model_client.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Fake and hosted adapters have the same typed response, usage, and error interfaces.",
+        "Timeout, unavailable provider, invalid output, and zero-success cost handling have deterministic tests.",
+        "Live execution requires an explicit mode and approved budget; SDK/model IDs are configuration, not scattered literals."
+      ],
+      "teach_back": "Explain dependency injection and show how the adapter lets you test an outage without calling a provider.",
+      "concepts": [
+        "Model APIs",
+        "adapters",
+        "dependency injection",
+        "timeouts",
+        "token usage"
+      ]
+    },
+    {
+      "id": "T006",
+      "title": "Create the extraction prompt and baseline analysis",
+      "milestone": "M1",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T005"
+      ],
+      "requirements": [
+        "FR02",
+        "FR07"
+      ],
+      "files": [
+        "prompts/ticket_analysis_v1.md",
+        "src/commerce_support/ai/analysis.py"
+      ],
+      "test_path": "tests/unit/test_ticket_analysis.py",
+      "additional_tests": [],
+      "acceptance": [
+        "The damaged-item sample extracts order reference 1042, product mention \"blender\", and a replacement preference without emitting any internal ID.",
+        "Missing identifiers remain null; injected instructions do not create privileged fields.",
+        "At most one schema repair occurs within the model-attempt budget; repeated invalid output becomes a typed failure."
+      ],
+      "teach_back": "Explain why extraction is not eligibility assessment and what a repair attempt can and cannot guarantee.",
+      "concepts": [
+        "Prompting",
+        "few-shot examples",
+        "structured output",
+        "failure handling"
+      ]
+    },
+    {
+      "id": "T007",
+      "title": "Start the evaluation harness and record a baseline",
+      "milestone": "M1",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T006"
+      ],
+      "requirements": [
+        "FR11",
+        "NFR03",
+        "NFR04"
+      ],
+      "files": [
+        "evals/development.jsonl",
+        "evals/run.py",
+        "evals/scorers.py",
+        "evals/manifest.json"
+      ],
+      "test_path": "tests/unit/test_eval_scoring.py",
+      "additional_tests": [],
+      "acceptance": [
+        "The twelve development seeds run through a deterministic adapter and emit per-case results plus aggregates.",
+        "Scorers handle missing evidence, zero claims, failed runs, and zero successful cases without misleading 100% scores.",
+        "Every report names dataset, model/fake mode, prompt version, commit, and whether calls were actually live."
+      ],
+      "teach_back": "Explain why a believable demo is not an evaluation and why development cases cannot become an untouched holdout.",
+      "concepts": [
+        "Evaluation design",
+        "baselines",
+        "datasets",
+        "metrics",
+        "provenance"
+      ]
+    },
+    {
+      "id": "T008",
+      "title": "Add PostgreSQL migrations and tenant-scoped repositories",
+      "milestone": "M2",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T004"
+      ],
+      "requirements": [
+        "FR01",
+        "FR05",
+        "NFR01",
+        "NFR06"
+      ],
+      "files": [
+        "src/commerce_support/db/models.py",
+        "src/commerce_support/db/session.py",
+        "migrations/",
+        "src/commerce_support/cases/repository.py"
+      ],
+      "test_path": "tests/integration/test_tenant_repositories.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Migrations create the case, commerce, policy, and version constraints (including one active policy version per key and the case-to-order binding) in a disposable PostgreSQL database.",
+        "Case/order reads and writes require a principal and reject cross-tenant references without disclosure.",
+        "Seed/reset commands are repeatable against the isolated test database and refuse production-like targets."
+      ],
+      "teach_back": "Explain a foreign key, a unique constraint, and why filtering only in the UI cannot enforce tenant isolation.",
+      "concepts": [
+        "SQL",
+        "PostgreSQL",
+        "SQLAlchemy",
+        "Alembic",
+        "authorization"
+      ]
+    },
+    {
+      "id": "T009",
+      "title": "Implement idempotent versioned knowledge ingestion",
+      "milestone": "M2",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T008"
+      ],
+      "requirements": [
+        "FR03",
+        "NFR01",
+        "NFR07"
+      ],
+      "files": [
+        "src/commerce_support/knowledge/ingest.py",
+        "src/commerce_support/knowledge/chunking.py",
+        "src/commerce_support/knowledge/versions.py",
+        "src/commerce_support/api/knowledge.py"
+      ],
+      "test_path": "tests/integration/test_ingestion_versions.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Text/Markdown/text-based PDF ingestion preserves checksums, source locators, tenant, and version.",
+        "Re-ingestion does not duplicate searchable chunks; an interrupted import stays nonsearchable.",
+        "Unsupported or oversized files fail safely, and activation atomically retires the previous policy version.",
+        "The upload endpoint returns 202 with a job ID; the in-process job ends as succeeded, failed, or quarantined and is readable through the job endpoint."
+      ],
+      "teach_back": "Explain why chunk IDs, source locations, and version IDs are different and how atomic activation prevents mixed policies.",
+      "concepts": [
+        "ETL",
+        "document parsing",
+        "chunking",
+        "metadata",
+        "idempotency"
+      ]
+    },
+    {
+      "id": "T010",
+      "title": "Build the semantic retrieval baseline",
+      "milestone": "M2",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T007",
+        "T009"
+      ],
+      "requirements": [
+        "FR04",
+        "NFR01",
+        "NFR03"
+      ],
+      "files": [
+        "src/commerce_support/knowledge/embeddings.py",
+        "src/commerce_support/knowledge/retrieval.py",
+        "evals/retrieval.py"
+      ],
+      "test_path": "tests/integration/test_retrieval_scope.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Embeddings record their index version (model, revision, dimension, preprocessing) and retrieve authorized active-version sections.",
+        "Old policies and foreign-tenant chunks never enter model context, including queries designed to match them exactly.",
+        "Section-level recall@5 is measured against development gold sections using an exact-search baseline."
+      ],
+      "teach_back": "Explain embeddings, similarity, why dimensions must match, and why duplicate chunks can inflate a retrieval metric.",
+      "concepts": [
+        "Embeddings",
+        "pgvector",
+        "vector search",
+        "recall@k",
+        "metadata filters"
+      ]
+    },
+    {
+      "id": "T011",
+      "title": "Draft grounded answers and build a read-only case view",
+      "milestone": "M2",
+      "required_for": "read_only_demo",
+      "depends_on": [
+        "T010"
+      ],
+      "requirements": [
+        "FR01",
+        "FR04",
+        "FR10"
+      ],
+      "files": [
+        "prompts/resolution_draft_v1.md",
+        "src/commerce_support/ai/drafting.py",
+        "src/commerce_support/api/cases.py",
+        "ui/app.py"
+      ],
+      "test_path": "tests/contract/test_grounded_draft.py",
+      "additional_tests": [],
+      "acceptance": [
+        "A draft cites only authorized retrieved section IDs and distinguishes customer statements from observed facts.",
+        "Missing/conflicting policy produces clarification or escalation rather than fabricated support.",
+        "The read-only UI shows message, draft, sources, run ID, and errors; it does not offer commerce execution."
+      ],
+      "teach_back": "Explain the difference between citation validity and factual support, and show an abstention that is a correct result.",
+      "concepts": [
+        "RAG generation",
+        "citations",
+        "Streamlit",
+        "API integration",
+        "abstention"
+      ]
+    },
+    {
+      "id": "T012",
+      "title": "Compare hybrid retrieval and optional reranking",
+      "milestone": "M2",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T010"
+      ],
+      "requirements": [
+        "FR04",
+        "FR11",
+        "NFR03",
+        "NFR05"
+      ],
+      "files": [
+        "src/commerce_support/knowledge/hybrid.py",
+        "src/commerce_support/knowledge/reranking.py",
+        "evals/compare_retrieval.py"
+      ],
+      "test_path": "tests/integration/test_hybrid_retrieval.py",
+      "additional_tests": [],
+      "acceptance": [
+        "A generated tsvector column with a GIN index supplies keyword rankings; keyword and vector rankings combine with documented fusion parameters after authorization filtering.",
+        "Semantic, hybrid, and optional reranked results use the same development queries and section-level metric.",
+        "The report includes latency and failure examples; adopt reranking only when the measured tradeoff is worthwhile."
+      ],
+      "teach_back": "Explain a query where keyword search can help and a case where reranking adds latency without a useful gain.",
+      "concepts": [
+        "Full-text search",
+        "rank fusion",
+        "cross-encoder",
+        "controlled experiments"
+      ]
+    },
+    {
+      "id": "T013",
+      "title": "Implement narrow authorized business-read tools",
+      "milestone": "M3",
+      "required_for": "sandbox_mvp",
+      "depends_on": [
+        "T005",
+        "T008"
+      ],
+      "requirements": [
+        "FR05",
+        "NFR01"
+      ],
+      "files": [
+        "src/commerce_support/commerce/read_tools.py",
+        "src/commerce_support/commerce/sandbox.py"
+      ],
+      "test_path": "tests/security/test_read_tools.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Order, stock, shipment, and replacement-history tools validate arguments with strict schemas and inject the authenticated principal server-side.",
+        "Unknown and inaccessible orders return the same safe external error.",
+        "Timeouts and missing records have typed outcomes; each result carries a timestamp/version.",
+        "lookup_order returns every order line and the delivery time from the latest delivered shipment, and binds the case to that order on first success."
+      ],
+      "teach_back": "Explain why tool arguments cannot supply trusted roles and why a tool result needs freshness metadata.",
+      "concepts": [
+        "Function calling",
+        "tool schemas",
+        "permissions",
+        "service integration"
+      ]
+    },
+    {
+      "id": "T014",
+      "title": "Implement deterministic replacement eligibility",
+      "milestone": "M3",
+      "required_for": "sandbox_mvp",
+      "depends_on": [
+        "T004"
+      ],
+      "requirements": [
+        "FR06",
+        "NFR01"
+      ],
+      "files": [
+        "src/commerce_support/commerce/rules.py",
+        "src/commerce_support/commerce/policy.py"
+      ],
+      "test_path": "tests/unit/test_replacement_rules.py",
+      "additional_tests": [],
+      "acceptance": [
+        "BR01-BR08 map to explicit eligible, needs-information, ineligible, or manual-review reason codes.",
+        "Seven-day/eight-day, negative age, missing delivery, wrong category, multi-line order, ambiguous or unmatched product mention, quantity, duplicate, and no-stock cases are tested.",
+        "The rule and line-resolution functions are pure (no I/O or clock reads); the model cannot override rule outcomes or supply a different policy version."
+      ],
+      "teach_back": "Explain which decisions belong in ordinary code and implement a changed boundary without editing the prompt.",
+      "concepts": [
+        "Rule engines",
+        "date arithmetic",
+        "pure functions",
+        "boundary tests"
+      ]
+    },
+    {
+      "id": "T015",
+      "title": "Create the bounded LangGraph case workflow",
+      "milestone": "M3",
+      "required_for": "sandbox_mvp",
+      "depends_on": [
+        "T011",
+        "T013",
+        "T014"
+      ],
+      "requirements": [
+        "FR07",
+        "FR11",
+        "NFR04",
+        "NFR05"
+      ],
+      "files": [
+        "src/commerce_support/workflow/state.py",
+        "src/commerce_support/workflow/graph.py",
+        "src/commerce_support/workflow/nodes.py"
+      ],
+      "test_path": "tests/integration/test_case_graph.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Graph nodes reuse tested functions and follow defined clarification, proposal, escalation, and error branches.",
+        "A run respects four model attempts, eight read attempts, and the wall-time ceiling.",
+        "Per-node trace IDs and state transitions are persisted without exposing credentials or hidden reasoning."
+      ],
+      "teach_back": "Explain when a graph adds value over functions and why adding more autonomous agents would not solve these requirements.",
+      "concepts": [
+        "LangChain",
+        "LangGraph",
+        "state machines",
+        "bounded agents",
+        "orchestration"
+      ]
+    },
+    {
+      "id": "T016",
+      "title": "Persist and authorize pause/resume across restarts",
+      "milestone": "M3",
+      "required_for": "sandbox_mvp",
+      "depends_on": [
+        "T015"
+      ],
+      "requirements": [
+        "FR01",
+        "FR07",
+        "NFR01",
+        "NFR02"
+      ],
+      "files": [
+        "src/commerce_support/workflow/checkpoints.py",
+        "src/commerce_support/workflow/resume.py"
+      ],
+      "test_path": "tests/security/test_workflow_resume.py",
+      "additional_tests": [],
+      "acceptance": [
+        "An interrupted case resumes from a durable checkpoint after process restart.",
+        "Foreign-tenant thread IDs and stale case versions cannot resume or disclose a case.",
+        "Node replay before an interrupt performs no unguarded irreversible side effect."
+      ],
+      "teach_back": "Explain the difference between conversational memory, a checkpoint, an approval record, and current business truth.",
+      "concepts": [
+        "Persistence",
+        "interrupts",
+        "resume authorization",
+        "optimistic concurrency"
+      ]
+    },
+    {
+      "id": "T017",
+      "title": "Bind manager decisions to immutable proposals",
+      "milestone": "M4",
+      "required_for": "sandbox_mvp",
+      "depends_on": [
+        "T016"
+      ],
+      "requirements": [
+        "FR08",
+        "NFR01"
+      ],
+      "files": [
+        "src/commerce_support/actions/proposals.py",
+        "src/commerce_support/actions/approval.py",
+        "src/commerce_support/api/proposals.py"
+      ],
+      "test_path": "tests/security/test_approval_binding.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Proposal hash binds exact parameters, identities, case, order version, and policy version.",
+        "Self-approval, wrong tenant/role, expiry 15 minutes after creation, changed hash, and stale versions are rejected; a policy or order-version change marks pending and approved proposals invalidated.",
+        "Decision revise sets revision_requested and a new proposal supersedes it; a proposal for a line outside the case's bound order is rejected; a message claiming approval never creates an approval record."
+      ],
+      "teach_back": "Explain why approving a case is weaker than approving an immutable action and demonstrate a stale-proposal failure.",
+      "concepts": [
+        "Human-in-the-loop",
+        "canonicalization",
+        "authorization",
+        "TOCTOU"
+      ]
+    },
+    {
+      "id": "T018",
+      "title": "Execute one transactional idempotent sandbox write",
+      "milestone": "M4",
+      "required_for": "sandbox_mvp",
+      "depends_on": [
+        "T017"
+      ],
+      "requirements": [
+        "FR09",
+        "NFR01",
+        "NFR02"
+      ],
+      "files": [
+        "src/commerce_support/actions/execution.py",
+        "src/commerce_support/actions/ledger.py",
+        "migrations/"
+      ],
+      "test_path": "tests/integration/test_replacement_execution.py",
+      "additional_tests": [],
+      "acceptance": [
+        "One transaction reserves stock, creates the request, records the execution, and appends audit.",
+        "Same-key replay returns the original result; changed payload conflicts; a different-key duplicate cannot create another replacement.",
+        "Concurrent last-unit requests never produce negative stock; a lost response after commit is recovered by key lookup.",
+        "Only an active same-tenant manager who is not the proposer can execute; each proposal has at most one execution; the application database role cannot update or delete audit rows."
+      ],
+      "teach_back": "Explain why a retry loop or Redis lock alone does not prevent duplicates, and what the database constraint guarantees.",
+      "concepts": [
+        "Transactions",
+        "row locks",
+        "idempotency",
+        "unique constraints",
+        "race conditions"
+      ]
+    },
+    {
+      "id": "T019",
+      "title": "Model external write uncertainty and reconciliation",
+      "milestone": "M4",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T018"
+      ],
+      "requirements": [
+        "FR09",
+        "NFR02"
+      ],
+      "files": [
+        "src/commerce_support/actions/outbox.py",
+        "src/commerce_support/actions/reconcile.py",
+        "tests/fixtures/fake_downstream.py"
+      ],
+      "test_path": "tests/contract/test_action_reconciliation.py",
+      "additional_tests": [],
+      "acceptance": [
+        "A scripted downstream adapter can commit and then time out; the app records reconciliation_required.",
+        "Status lookup with the original key recovers a known result without a second effect.",
+        "An adapter without idempotency/status lookup requires manual reconciliation rather than blind retry."
+      ],
+      "teach_back": "Explain why a network timeout is not proof that a write failed and why this design does not promise universal exactly-once execution.",
+      "concepts": [
+        "Outbox",
+        "distributed failure",
+        "reconciliation",
+        "adapter contracts"
+      ]
+    },
+    {
+      "id": "T020",
+      "title": "Finish the employee review and approval experience",
+      "milestone": "M4",
+      "required_for": "sandbox_mvp",
+      "depends_on": [
+        "T018"
+      ],
+      "requirements": [
+        "FR08",
+        "FR09",
+        "FR10"
+      ],
+      "files": [
+        "ui/app.py",
+        "src/commerce_support/api/proposals.py",
+        "src/commerce_support/api/runs.py"
+      ],
+      "test_path": "tests/e2e/test_replacement_journey.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Agent and separate manager complete the case, source review, approval, and execution journey; the proposer sees no approve/execute controls, and the backend rejects those calls anyway.",
+        "Reject/revise, expiry, no-stock, and reconciliation statuses are visibly distinct.",
+        "The UI says request created only after confirmation and never claims shipment or sends customer email."
+      ],
+      "teach_back": "Explain which UI controls help users and which backend checks actually enforce safety.",
+      "concepts": [
+        "Human review UX",
+        "stateful UI",
+        "end-to-end tests",
+        "truthful status"
+      ]
+    },
+    {
+      "id": "T021",
+      "title": "Expand regression, safety, and locked evaluation sets",
+      "milestone": "M5",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T019",
+        "T020"
+      ],
+      "requirements": [
+        "FR11",
+        "NFR01",
+        "NFR02",
+        "NFR03"
+      ],
+      "files": [
+        "evals/development.jsonl",
+        "evals/acceptance_locked.jsonl",
+        "evals/manifest.json",
+        "tests/security/"
+      ],
+      "test_path": "tests/security/test_release_safety.py",
+      "additional_tests": [],
+      "acceptance": [
+        "There are 60 reviewed development and 120 separately frozen acceptance cases using the documented primary_category enum and counts, including multi-actor and multi-step scenarios.",
+        "Prompt-injection, access control, approval tampering, replays, and failure paths have deterministic release-blocking tests.",
+        "All metrics expose counts/denominators; fake and live outcomes are never mixed without labels."
+      ],
+      "teach_back": "Explain how tuning on a test failure changes what can honestly be claimed about that test set.",
+      "concepts": [
+        "Red teaming",
+        "evaluation splits",
+        "rubrics",
+        "regression suites"
+      ]
+    },
+    {
+      "id": "T022",
+      "title": "Instrument redacted traces, usage, and latency",
+      "milestone": "M5",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T015"
+      ],
+      "requirements": [
+        "FR11",
+        "NFR04",
+        "NFR05",
+        "NFR07"
+      ],
+      "files": [
+        "src/commerce_support/observability/traces.py",
+        "src/commerce_support/observability/redaction.py",
+        "src/commerce_support/observability/costs.py"
+      ],
+      "test_path": "tests/unit/test_observability.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Local runs include versions, timing, usage, safe errors, and trace IDs for each component.",
+        "Hosted LangSmith export is opt-in and passes an allowlist/redaction test, building on the T002 log filter, before export.",
+        "Cost reports include retries/failures in the numerator and use a dated price basis or explicitly report tokens only."
+      ],
+      "teach_back": "Given a slow failed case, identify whether retrieval, provider, or tool latency dominated and what evidence supports that diagnosis.",
+      "concepts": [
+        "LangSmith",
+        "observability",
+        "redaction",
+        "cost accounting",
+        "profiling"
+      ]
+    },
+    {
+      "id": "T023",
+      "title": "Train and benchmark the classical ticket router",
+      "milestone": "M5",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T007"
+      ],
+      "requirements": [
+        "FR12",
+        "NFR03",
+        "NFR06"
+      ],
+      "files": [
+        "notebooks/01_ticket_eda.ipynb",
+        "src/commerce_support/ml/train.py",
+        "src/commerce_support/ml/predict.py",
+        "evals/routing.py"
+      ],
+      "test_path": "tests/unit/test_routing_pipeline.py",
+      "additional_tests": [],
+      "acceptance": [
+        "The label guide covers six intents; grouped splits prevent template/conversation leakage.",
+        "TF-IDF is fit on training data only; macro-F1, per-class metrics, and confusion matrix include all label supports.",
+        "An LLM comparison uses the same held-out initial messages and the challenge slice, only within an approved budget (otherwise reported as not measured); the result decides whether to use or simply document the baseline.",
+        "Every record names its generator; a hand-written challenge slice of at least 60 messages is reported separately from the generated test split."
+      ],
+      "teach_back": "Explain data leakage, macro versus weighted F1, and why a simple classifier might be preferable to a larger model.",
+      "concepts": [
+        "pandas",
+        "EDA",
+        "scikit-learn",
+        "TF-IDF",
+        "logistic regression",
+        "ML evaluation"
+      ]
+    },
+    {
+      "id": "T024",
+      "title": "Run measured retrieval, prompt, and model comparisons",
+      "milestone": "M5",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T012",
+        "T021",
+        "T022",
+        "T023"
+      ],
+      "requirements": [
+        "FR04",
+        "FR11",
+        "FR12",
+        "NFR03",
+        "NFR05"
+      ],
+      "files": [
+        "evals/compare.py",
+        "reports/experiments/",
+        "reports/model_card.md"
+      ],
+      "test_path": "tests/unit/test_experiment_manifest.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Every comparison fixes the dataset and records one main changed variable plus model/prompt/index versions.",
+        "Baseline and candidate reports include quality, latency, cost, failure examples, and a keep/reject decision.",
+        "No paid run exceeds the approved cap; insufficient budget is reported as unmeasured, not estimated success."
+      ],
+      "teach_back": "Defend one improvement and one rejected change using measured results rather than framework popularity.",
+      "concepts": [
+        "Ablation",
+        "experiment tracking",
+        "model selection",
+        "cost-quality tradeoffs"
+      ]
+    },
+    {
+      "id": "T025",
+      "title": "Replace local identity and harden privacy boundaries",
+      "milestone": "M6",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T020",
+        "T022"
+      ],
+      "requirements": [
+        "FR14",
+        "NFR01",
+        "NFR07"
+      ],
+      "files": [
+        "src/commerce_support/auth/oidc.py",
+        "src/commerce_support/auth/permissions.py",
+        "src/commerce_support/config.py"
+      ],
+      "test_path": "tests/security/test_oidc_and_privacy.py",
+      "additional_tests": [],
+      "acceptance": [
+        "OIDC signature, issuer, audience, expiry, tenant mapping, and current roles are validated; tests use a locally generated key and JWKS fixture, not a live identity provider.",
+        "Development identity is rejected in nonlocal deployment settings; role revocation blocks execution of old approvals.",
+        "Secrets and raw personal data do not enter Git, error responses, or hosted trace payloads."
+      ],
+      "teach_back": "Explain authentication versus authorization, token validation, and why an old approval must not bypass revoked permissions.",
+      "concepts": [
+        "OIDC",
+        "JWT validation",
+        "RBAC",
+        "privacy",
+        "deployment security"
+      ]
+    },
+    {
+      "id": "T026",
+      "title": "Move ingestion and recovery into durable jobs",
+      "milestone": "M6",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T019",
+        "T022"
+      ],
+      "requirements": [
+        "FR03",
+        "FR13",
+        "NFR02",
+        "NFR04"
+      ],
+      "files": [
+        "src/commerce_support/jobs/app.py",
+        "src/commerce_support/jobs/ingestion.py",
+        "src/commerce_support/jobs/reconciliation.py"
+      ],
+      "test_path": "tests/integration/test_job_recovery.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Celery/Redis jobs keep the existing 202 job contract and persisted status; retries are bounded to three total attempts for ingestion.",
+        "Worker interruption does not activate incomplete documents or duplicate replacement effects.",
+        "Permanent or exhausted failures move to quarantined with diagnostics and require deliberate retry or repair."
+      ],
+      "teach_back": "Explain at-least-once delivery and why a durable queue still requires idempotent job handlers.",
+      "concepts": [
+        "Celery",
+        "Redis",
+        "queues",
+        "retry/backoff",
+        "background processing"
+      ]
+    },
+    {
+      "id": "T027",
+      "title": "Containerize, deploy, and document recovery",
+      "milestone": "M6",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T025",
+        "T026"
+      ],
+      "requirements": [
+        "FR14",
+        "NFR04",
+        "NFR06",
+        "NFR07"
+      ],
+      "files": [
+        "Dockerfile",
+        "compose.yaml",
+        ".github/workflows/ci.yml",
+        "docs/runbooks/DEPLOYMENT.md",
+        "docs/runbooks/RESTORE.md"
+      ],
+      "test_path": "tests/integration/test_deployment_smoke.py",
+      "additional_tests": [],
+      "acceptance": [
+        "API/UI/worker/database/broker start from documented pinned configuration with private database access.",
+        "CI runs offline checks and database tests; hosted deployment is authenticated and sandbox-only.",
+        "Health/readiness, migration backup, restore to an isolated database, and application rollback have recorded evidence."
+      ],
+      "teach_back": "Explain the difference between a container image, a running container, a database volume, and a backup.",
+      "concepts": [
+        "Docker",
+        "CI/CD",
+        "migrations",
+        "deployment",
+        "backup/restore"
+      ]
+    },
+    {
+      "id": "T028",
+      "title": "Exercise concurrent load, restarts, and spending limits",
+      "milestone": "M6",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T027"
+      ],
+      "requirements": [
+        "FR07",
+        "FR09",
+        "NFR02",
+        "NFR05",
+        "NFR08"
+      ],
+      "files": [
+        "scripts/load_cases.py",
+        "tests/integration/test_chaos_recovery.py",
+        "reports/performance.md"
+      ],
+      "test_path": "tests/integration/test_chaos_recovery.py",
+      "additional_tests": [],
+      "acceptance": [
+        "At least 100 attempts at five concurrent sessions report p50/p95, failures, machine/network, and fake/live mode.",
+        "Crash-after-commit, broker loss, provider timeouts, and paused-approval restart preserve safe outcome semantics.",
+        "Configured token/call/spend caps stop runaway requests; no universal uptime or throughput claim is made.",
+        "Per-principal rate limits on run, decision, and execute endpoints return 429 RATE_LIMITED without side effects; limits come from configuration."
+      ],
+      "teach_back": "Explain a p95 result, distinguish a latency target from a timeout, and show what happens after an ambiguous write.",
+      "concepts": [
+        "Load testing",
+        "fault injection",
+        "SLOs",
+        "budgets",
+        "resilience"
+      ]
+    },
+    {
+      "id": "T029",
+      "title": "Freeze and review the final release evidence",
+      "milestone": "M7",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T024",
+        "T028"
+      ],
+      "requirements": [
+        "FR11",
+        "FR12",
+        "FR14",
+        "NFR01",
+        "NFR02",
+        "NFR03",
+        "NFR04",
+        "NFR05",
+        "NFR06",
+        "NFR07",
+        "NFR08"
+      ],
+      "files": [
+        "reports/final_evaluation.md",
+        "reports/data_card.md",
+        "reports/model_card.md",
+        "reports/release_checklist.md"
+      ],
+      "test_path": "tests/contract/test_release_manifest.py",
+      "additional_tests": [],
+      "acceptance": [
+        "The report states every target as met, missed, or not measured with a supporting artifact and denominator.",
+        "Safety tests pass, remaining limitations are visible, and locked-data contamination status is explicit.",
+        "A clean checkout reproduces the documented deterministic suite and locates all report artifacts."
+      ],
+      "teach_back": "Explain the strongest claim your evidence supports and one important claim it does not support.",
+      "concepts": [
+        "Release review",
+        "reproducibility",
+        "data/model cards",
+        "technical communication"
+      ]
+    },
+    {
+      "id": "T030",
+      "title": "Prepare the portfolio demo and engineering narrative",
+      "milestone": "M7",
+      "required_for": "portfolio",
+      "depends_on": [
+        "T029"
+      ],
+      "requirements": [
+        "FR14",
+        "NFR06"
+      ],
+      "files": [
+        "README.md",
+        "reports/demo_script.md",
+        "reports/architecture_walkthrough.md",
+        "reports/failure_casebook.md"
+      ],
+      "test_path": "tests/e2e/test_portfolio_demo.py",
+      "additional_tests": [],
+      "acceptance": [
+        "Demo shows a grounded answer, an approved request, an unsafe request blocked, and a recovered failure.",
+        "The narrative includes measured comparisons, ten failure/correction examples, limitations, and setup instructions.",
+        "Claims of business savings, real-user accuracy, or production certification are absent unless separately evidenced."
+      ],
+      "teach_back": "Give a five-minute architecture explanation and diagnose one failure without relying on the coach to supply the reasoning.",
+      "concepts": [
+        "Portfolio storytelling",
+        "engineering tradeoffs",
+        "demo design",
+        "interview readiness"
+      ]
+    }
+  ]
+}

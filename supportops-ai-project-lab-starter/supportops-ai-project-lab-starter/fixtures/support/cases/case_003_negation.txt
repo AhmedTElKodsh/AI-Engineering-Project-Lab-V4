@@ -1,0 +1,2 @@
+Case SUP-003
+Customer: Order 2088 arrived today. The kettle is not broken; I only need instructions for cleaning it.

@@ -1,0 +1,2 @@
+Case SUP-001
+Customer: Order 1042 arrived yesterday. The glass container is broken. Please send a replacement.

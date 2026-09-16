@@ -1,0 +1,4 @@
+interface:
+  display_name: "SupportOps AI Tutor"
+  short_description: "Build small runnable AI tools and demonstrate understanding."
+  default_prompt: "Use $ai-engineering-tutor to resume SupportOps from my latest actual evidence, with one small runnable step."

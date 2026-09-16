@@ -1,0 +1,248 @@
+{
+  "schema_version": 2,
+  "project_version": "1.1.0",
+  "current_task": null,
+  "last_session": null,
+  "tasks": {
+    "T001": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T002": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T003": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T004": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T005": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T006": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T007": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T008": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T009": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T010": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T011": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T012": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T013": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T014": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T015": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T016": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T017": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T018": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T019": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T020": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T021": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T022": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T023": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T024": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T025": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T026": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T027": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T028": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T029": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    },
+    "T030": {
+      "status": "not_started",
+      "mastery": "unassessed",
+      "evidence": [],
+      "mastery_evidence": [],
+      "blocker": null,
+      "updated_at": null
+    }
+  }
+}

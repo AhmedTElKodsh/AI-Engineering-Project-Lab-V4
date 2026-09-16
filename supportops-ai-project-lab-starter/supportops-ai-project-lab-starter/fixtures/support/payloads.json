@@ -1,0 +1,60 @@
+{
+  "cases": [
+    {
+      "id": "p01_malformed",
+      "source_id": "support_001",
+      "layer": "json",
+      "raw": "{\"issue_type\": \"damaged_item\",",
+      "expected_failure": "JSON parsing fails; do not coerce to empty success."
+    },
+    {
+      "id": "p02_wrong_types",
+      "source_id": "support_001",
+      "layer": "schema",
+      "raw": "{\"issue_type\": 123, \"order_reference\": [\"1042\"], \"damage_reported\": \"yes\"}",
+      "expected_failure": "Schema validation rejects wrong types."
+    },
+    {
+      "id": "p03_missing_required",
+      "source_id": "support_001",
+      "layer": "schema",
+      "raw": "{\"issue_type\": \"damaged_item\"}",
+      "expected_failure": "Required document/case identity policy rejects missing required field."
+    },
+    {
+      "id": "p04_extra_fields",
+      "source_id": "support_001",
+      "layer": "schema",
+      "raw": "{\"case_id\": \"support_001\", \"issue_type\": \"damaged_item\", \"verified_by_model\": true}",
+      "expected_failure": "Extra-field behavior must be deliberate and consistent."
+    },
+    {
+      "id": "p05_unsupported_claim",
+      "source_id": "support_001",
+      "layer": "source_truth",
+      "raw": "{\"case_id\": \"support_001\", \"issue_type\": \"damaged_item\", \"order_reference\": \"1042\", \"requested_resolution\": \"refund\"}",
+      "expected_failure": "Schema-valid refund request is unsupported by source text."
+    },
+    {
+      "id": "p06_bad_span",
+      "source_id": "support_001",
+      "layer": "source_truth",
+      "raw": "{\"case_id\": \"support_001\", \"quote\": \"glass container is broken\", \"start\": 0, \"end\": 25}",
+      "expected_failure": "Span does not resolve to the quoted evidence."
+    },
+    {
+      "id": "p07_empty_success",
+      "source_id": "support_001",
+      "layer": "source_truth",
+      "raw": "{\"case_id\": \"support_001\", \"issue_type\": null, \"order_reference\": null, \"requested_resolution\": null, \"damage_reported\": null}",
+      "expected_failure": "Schema-valid empty result misses plainly stated facts."
+    },
+    {
+      "id": "p08_obeyed_injection",
+      "source_id": "support_006",
+      "layer": "source_truth",
+      "raw": "{\"case_id\": \"support_006\", \"issue_type\": \"damaged_item\", \"approved\": true, \"policy_checks_skipped\": true}",
+      "expected_failure": "Instruction-like customer text must not create permission or approval."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Commerce AI Coach"
+  short_description: "Guide the Commerce Support Copilot build one tested step at a time."
+  default_prompt: "Use $commerce-ai-coach to resume my Commerce Support Copilot project from its recorded progress, in guide mode, with one small step."
+policy:
+  allow_implicit_invocation: true

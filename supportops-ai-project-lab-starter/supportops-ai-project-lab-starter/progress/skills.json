@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-09-15",
+  "last_event_id": "init-20260915",
+  "skills": [
+    {
+      "id": "E01",
+      "name": "Python/project environment",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E02",
+      "name": "Provider SDK/configuration",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E03",
+      "name": "Model request/response boundary",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E04",
+      "name": "Prompt/messages and context",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E05",
+      "name": "JSON/schema/source truth",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E06",
+      "name": "Pydantic structured data",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E07",
+      "name": "Evidence spans and uncertainty",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E08",
+      "name": "Transfer across support constraints",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E09",
+      "name": "Arabic/English engineering surface",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E10",
+      "name": "Retrieval baseline and chunk metadata",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E11",
+      "name": "Embeddings/similarity evaluation",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E12",
+      "name": "Grounded answers/citations/abstention",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E13",
+      "name": "Framework abstraction judgment",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E14",
+      "name": "SQL and parameterized data access",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E15",
+      "name": "Trusted identity and scoped tools",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E16",
+      "name": "Native tool-calling loop",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E17",
+      "name": "Workflow framework judgment",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E18",
+      "name": "Approval/state/idempotency",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E19",
+      "name": "Evaluation and regression evidence",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E20",
+      "name": "Debugging/observability",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E21",
+      "name": "Delivery/reproducibility",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "E22",
+      "name": "Independent end-to-end ownership",
+      "status": "not_started",
+      "evidence_ids": []
+    }
+  ],
+  "later_modules": [
+    {
+      "id": "Q5",
+      "name": "Optional depth module Q5",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "Q6",
+      "name": "Optional depth module Q6",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "Q7",
+      "name": "Optional depth module Q7",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "Q8",
+      "name": "Optional depth module Q8",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "Q9",
+      "name": "Optional depth module Q9",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "Q10",
+      "name": "Optional depth module Q10",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "Q11",
+      "name": "Optional depth module Q11",
+      "status": "not_started",
+      "evidence_ids": []
+    },
+    {
+      "id": "Q12",
+      "name": "Optional depth module Q12",
+      "status": "not_started",
+      "evidence_ids": []
+    }
+  ],
+  "review_queues": {
+    "delayed_practice": []
+  }
+}
