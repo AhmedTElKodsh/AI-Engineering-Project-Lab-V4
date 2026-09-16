@@ -1,0 +1,266 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-09-15",
+  "last_event_id": "init-20260915",
+  "route": "J0-J5",
+  "stage": "J0",
+  "quest": "Q0",
+  "milestone": "0.3",
+  "mode": "learn",
+  "onboarding": {
+    "status": "complete_inherited",
+    "calibration": "sufficient_inherited",
+    "source": "conversation:project-redesign",
+    "runtime_proof": false
+  },
+  "code_location": {
+    "path": null,
+    "status": "unverified",
+    "evidence_id": null
+  },
+  "provider": {
+    "name": "Groq",
+    "reference": "docs/provider-reference.md",
+    "baseline_date": "2026-09-15",
+    "installed_versions": {
+      "python": null,
+      "uv": null,
+      "groq": null,
+      "python-dotenv": null
+    }
+  },
+  "last_learner_event": null,
+  "conceptual_thread": "Local Python -> SDK -> authorized provider request -> parsed response -> first small SupportOps reply-drafting result.",
+  "pending_action": "Reconcile the learner application location/current output, then resume the smallest first-call SupportOps action without replaying onboarding.",
+  "expected_evidence": "Actual first-call command/output plus learner explanation of local deterministic control flow versus probabilistic model output.",
+  "assistance_level": "worked_example",
+  "blocker": null,
+  "next_retrieval_target": null,
+  "active_minutes_observed": null,
+  "milestones": [
+    {
+      "id": "0.3",
+      "stage": "J0",
+      "status": "in_progress",
+      "gates": {
+        "execution": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "0.4",
+      "stage": "J0",
+      "status": "pending",
+      "gates": {
+        "execution": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "0.5",
+      "stage": "J0",
+      "status": "pending",
+      "gates": {
+        "modification": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "0.6",
+      "stage": "J0",
+      "status": "pending",
+      "gates": {
+        "execution": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "0.7",
+      "stage": "J0",
+      "status": "pending",
+      "gates": {
+        "execution": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "0.8",
+      "stage": "J0",
+      "status": "pending",
+      "gates": {
+        "execution": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "debug": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "0.9",
+      "stage": "J0",
+      "status": "pending",
+      "gates": {
+        "modification": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "transfer": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "J1",
+      "stage": "J1",
+      "status": "pending",
+      "gates": {
+        "execution": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "modification": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "debug": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "J2",
+      "stage": "J2",
+      "status": "pending",
+      "gates": {
+        "modification": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "transfer": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "J3",
+      "stage": "J3",
+      "status": "pending",
+      "gates": {
+        "execution": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "modification": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "debug": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "J4",
+      "stage": "J4",
+      "status": "pending",
+      "gates": {
+        "execution": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "modification": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "debug": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    },
+    {
+      "id": "J5",
+      "stage": "J5",
+      "status": "pending",
+      "gates": {
+        "execution": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "explanation": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "modification": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "debug": {
+          "status": "pending",
+          "evidence_ids": []
+        },
+        "transfer": {
+          "status": "pending",
+          "evidence_ids": []
+        }
+      }
+    }
+  ]
+}
